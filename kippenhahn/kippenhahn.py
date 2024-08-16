@@ -645,7 +645,7 @@ class kippenhahn(object):
         if not (self._param['Yaxis'] in ['mass', 'radius', 'q', 'log_mass', 'log_radius', 'log_q']):
             raise ValueError(self._param['Yaxis']+"not a valid option for parameter Yaxis")
         if not (self._param['Xaxis'] in ['model_number', 'star_age', 'inv_star_age', 'log_model_number', 'log_star_age',
-                'log_inv_star_age']):
+                'log_inv_star_age','mass']):
             raise ValueError(self._param['Xaxis']+"not a valid option for parameter Xaxis")
         
         """
@@ -778,6 +778,9 @@ class kippenhahn(object):
             self._Xaxis_min = np.max(np.log10(2.*self.profile_age[-1] - self.profile_age[-2] - self.profile_age))
             self._Xaxis_max = max([np.min(np.log10(2.*self.profile_age[-1] - self.profile_age[-2] - self.profile_age)),
                             self._Xaxis_min-self._param['Xaxis_dynamic_range']])
+        elif self._param['Xaxis'] == "mass":
+            self._Xaxis_min = np.min(self.history["star_mass"])
+            self._Xaxis_max = np.max(self.history["star_mass"])
         else:
             raise(self._param['Xaxis']+" is not a valid option for Xaxis")
 
@@ -854,6 +857,8 @@ class kippenhahn(object):
                 Xaxis_values = interp1d(np.log10(self.profile_age), data_all[:,i])
             elif self._param['Xaxis'] == "log_inv_star_age":
                 Xaxis_values = interp1d(np.log10(2.*self.profile_age[-1]-self.profile_age[-2]-self.profile_age), data_all[:,i])
+            elif self._param['Xaxis'] == "mass":
+                Xaxis_values = interp1d(self.history["star_mass"], data_all[:,i])
             self._data[:,i] = Xaxis_values(X_to_interp)
 
 
@@ -909,6 +914,8 @@ class kippenhahn(object):
             Xlabel = "log(Star Age [yr])"
         elif self._param['Xaxis'] == "log_inv_star_age":
             Xlabel = "log(Time since the end of evolution [yr])"
+        elif self._param['Xaxis'] == "mass":
+            Xlabel = r"Star mass [M$_\odot$]"
 
         if self._param["cmap_label"] is not None:
             cmap_label = self._param["cmap_label"]
@@ -1077,6 +1084,11 @@ class kippenhahn(object):
                 X_axis_czones = np.log10(self.history['star_age'])
             elif self._param['Xaxis'] == "log_inv_star_age":
                 X_axis_czones = np.log10(2.*self.history['star_age'][-1]-self.history['star_age'][-2]-self.history['star_age'])
+            elif self._param['Xaxis'] == "log_inv_star_age":
+                X_axis_czones = np.log10(2.*self.history['star_age'][-1]-self.history['star_age'][-2]-self.history['star_age'])
+            elif self._param['Xaxis'] == "mass":
+                X_axis_czones = np.log10(self.history['star_mass'])
+
 
 
             if self._param['Yaxis'] == "mass":
@@ -1147,6 +1159,8 @@ class kippenhahn(object):
                 X_axis_TML = np.log10(self.profile_age)
             elif self._param['Xaxis'] == "log_inv_star_age":
                 X_axis_TML = np.log10(2.*self.profile_age[-1]- self.profile_age[-2] -self.profile_age)
+            elif self._param['Xaxis'] == "mass":
+                X_axis_TML = self.history["star_mass"]
 
 
         lines_TML = []
@@ -1189,7 +1203,8 @@ class kippenhahn(object):
                 X_axis_orbit = np.log10(self.history['star_age'])
             elif self._param['Xaxis'] == "log_inv_star_age":
                 X_axis_orbit = np.log10(2.*self.history['star_age'][-1]-self.history['star_age'][-2]-self.history['star_age'])
-
+            if self._param['Xaxis'] == "mass":
+                X_axis_orbit = self.history['star_mass']
 
 
             if self._param['Yaxis'] == "mass":
@@ -1224,7 +1239,8 @@ class kippenhahn(object):
                 X_axis_tau10 = np.log10(self.history['star_age'])
             elif self._param['Xaxis'] == "log_inv_star_age":
                 X_axis_tau10 = np.log10(2.*self.history['star_age'][-1]-self.history['star_age'][-2]-self.history['star_age'])
-
+            elif self._param['Xaxis'] == "mass":
+                X_axis_tau10 = self.history['star_mass']
 
 
             if self._param['Yaxis'] == "mass":
@@ -1257,7 +1273,8 @@ class kippenhahn(object):
                 X_axis_tau100 = np.log10(self.history['star_age'])
             elif self._param['Xaxis'] == "log_inv_star_age":
                 X_axis_tau100 = np.log10(2.*self.history['star_age'][-1]- self.history['star_age'][-2] -self.history['star_age'])
-
+            elif self._param['Xaxis'] == "mass":
+                X_axis_tau100 = self.history['star_mass']
 
 
             if self._param['Yaxis'] == "mass":
@@ -1308,7 +1325,8 @@ class kippenhahn(object):
                 X_axis_abundances = np.log10(self.history['star_age'])
             elif self._param['Xaxis'] == "log_inv_star_age":
                 X_axis_abundances = np.log10(2.*self.history['star_age'][-1]-self.history['star_age'][-1]-self.history['star_age'])
-
+            elif self._param['Xaxis'] == "mass":
+                X_axis_tau100 = self.history['star_mass']
 
 
             if 'center_h1' in self.history.dtype.names:
