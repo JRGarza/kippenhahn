@@ -931,7 +931,7 @@ class kippenhahn(object):
             cmap_label = "log(specific angular momentum [cm$^2$/s])"
         elif self._param['Variable'] == "eps_recombination":
             cmap_label = "log($\epsilon_{recombination}$ [erg/s/gr])"
-        elif self._param['Variable'] == "ionization_energy":
+        elif self._param['Variable'] == "ionization_energy_T":
             cmap_label = "log(specific ionization energy [erg/gr])"
         elif self._param['Variable'] == "dq":
             cmap_label = "Cell Mass Fraction"
@@ -991,6 +991,8 @@ class kippenhahn(object):
             cmap_label = r"log($\tau_{thermal}/\tau_{expansion}$)"
         elif self._param['Variable'] == "E_kinetic_div_E_thermal":
             cmap_label = r"log($E_{kinetic}/E_{thermal}$)"
+        elif self._param['Variable'] == "binding_energy":
+            cmap_label = "$E_{bind}$"
 
 
 
